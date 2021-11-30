@@ -226,6 +226,7 @@ def trans2absr(input_data):
     X_T=np.log10(1/input_data)
     return X_T 
 
+''' Obselete function TR: June_20_202
 def msc(input_data, reference=None):
     ''' Perform Multiplicative scatter correction'''
 
@@ -249,3 +250,4 @@ def msc(input_data, reference=None):
         data_msc[i,:] = (input_data[i,:] - fit[0][1]) / fit[0][0] 
 
     return (data_msc, ref)
+'''
