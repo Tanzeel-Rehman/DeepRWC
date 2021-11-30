@@ -13,7 +13,8 @@ from utils import init_weights
 import torch.nn as nn
 from LR_finder import LRFinder
 import torch.optim as optim
-from Ranger_Optimizer import Lookahead_2
+
+#from Ranger_Optimizer import Lookahead_2 # Check on FastAI
 import numpy as np
 
 np.random.seed(42)
