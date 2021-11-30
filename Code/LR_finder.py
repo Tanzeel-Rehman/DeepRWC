@@ -2,7 +2,8 @@
 """
 Created on Wed Oct  2 21:25:53 2019
 
-@author: Tanzeel
+@author: 
+Code from:  fastai/lr_find: https://github.com/fastai/fastai 
 """
 
 from __future__ import print_function, with_statement, division
