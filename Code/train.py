@@ -21,7 +21,7 @@ from utils import init_weights,Make_one_one_plot,benchmark,train_One_epoch,evalu
 #from Ranger_Optimizer import Lookahead_2
 #from OneCycle_Policy import OneCycleLR    #Obselete TR: Dec_20_2020  (Pytorch has cyclic schedulers now) 
 
-'''---------Below is Main code'''
+'''---------Below is Main code-------'''
 torch.manual_seed(42)
 np.random.seed(42)
 
@@ -38,7 +38,7 @@ filename = '13_1+13_4_Top_June15.xlsx'
 ls=Load_Spectra(filename)
 
 #Get the Augmented Data 
-train_X,train_Y,val_X,val_Y=ls.Augment(10,0.067)
+train_X,train_Y,val_X,val_Y=ls.Augment(10,0.067) #Augment Data 10 times with 0.067 as shift
 
 #Make the data tensor
 train_data = ls.XY_tensor(train_X,train_Y)
@@ -63,33 +63,30 @@ optimizer = optim.Adam(model.parameters(),lr=0.00316)   # Baseline with fixed le
 
 '''--------Schduler For Cyclic LR-----------'''
 """
-#1) Cyclic LR with cosine annelaing 
+1) Cyclic LR with cosine annelaing 
 scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=0.0002633, max_lr=0.00316,step_size_up=3664, 
                                               step_size_down=None, mode='exp_range',gamma=0.99994,scale_fn=None,
                                               cycle_momentum=False)
 
-#2) Cyclic LR with Triangular  
+2) Cyclic LR with Triangular  
 #scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=0.0002633, max_lr=0.00316,step_size_up=3664, 
                                               step_size_down=None, mode='triangular',gamma=1.0,
                                               cycle_momentum=False)
 
-"""
-
-"""
-1) Schduler For One Cycle Policy with Cosine Annealing
+3) Schduler For One Cycle Policy with Cosine Annealing
 scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer,max_lr=0.00316,total_steps=(n_epochs*457)+1,
                                                 anneal_strategy='cos',pct_start=0.4,cycle_momentum=False,div_factor=12)
 
-2) Scheduler For  One Cycle policy with Linear Annealing
+4) Scheduler For  One Cycle policy with Linear Annealing
 scheduler = OneCycleLR(optimizer, num_steps=(457*n_epochs), lr_range=(0.00316/12, 0.00316),annihilation_frac = 0.2)
 
-3) Schduler For One Cycle with SGD Optimizer and Cos annealing
+5) Schduler For One Cycle with SGD Optimizer and Cos annealing
 scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer,max_lr=3.25643e-5,total_steps=(n_epochs*258)+1,
                                                 anneal_strategy='cos',pct_start=0.4,cycle_momentum=True,div_factor=5.0)
 
 """
 
-'''------------Begine training the network-----------'''
+'''------------Begin network training -----------'''
 for epoch in range(n_epochs):
     training_loss,lrs=train_One_epoch(model,train_loader,optimizer,loss_fn)  
     training_losses.append(training_loss)
@@ -104,6 +101,7 @@ for epoch in range(n_epochs):
     if validation_loss < best_valid:
         best_valid = validation_loss
         print("New Best model found")
+        # Save the model
         torch.save({
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
@@ -112,7 +110,7 @@ for epoch in range(n_epochs):
                 'val_loss':validation_loss
                 },f"../Deep learning approach/Weights/test_wts.pt")
     
-'''------------End of training loop---------------'''
+'''------------End of training loop. Let's Visualize---------------'''
 
 #Display the training and validation losses
 plt.figure()
